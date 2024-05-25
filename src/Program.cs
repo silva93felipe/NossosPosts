@@ -1,7 +1,11 @@
+using Domain.Repositories;
+using Infra.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
@@ -9,10 +13,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-app.MapGet("/weatherforecast", () =>
+/* app.MapGet("/weatherforecast", () =>
 {}
 )
 .WithName("GetWeatherForecast")
-.WithOpenApi();
-
+.WithOpenApi(); */
 app.Run();

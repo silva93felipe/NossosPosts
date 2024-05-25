@@ -13,15 +13,16 @@ namespace Infra.Repository
             _context = postContext;
         }
 
-        public Task Create(User newUser)
+        public async Task Create(User newUser)
         {
-            throw new NotImplementedException();
+            await _context.User.AddAsync(newUser);
+            await Save();
         }
 
         public async Task<User> GetById(Guid userId)
             => await _context.User.FirstOrDefaultAsync(e => e.Id == userId);
 
-        public Task Save()
-            => _context.SaveChangesAsync();
+        public async Task Save()
+            => await _context.SaveChangesAsync();
     }
 }

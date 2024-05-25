@@ -9,6 +9,7 @@ namespace Infra.Context
         public DbSet<Post> Post { get; set;}
         public DbSet<User> User { get; set;}
         public DbSet<Curtida> Curtida { get; set;}
-        public DbSet<Comentario> Comentario { get; set;}        
+        public DbSet<Comentario> Comentario { get; set;}
+        public DbSet<Favorito> Favorito { get; set;}        
     }
 }

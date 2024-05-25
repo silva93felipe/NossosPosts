@@ -13,23 +13,26 @@ namespace Infra.Repository
             _context = postContext;
         }
 
-        public Task Atualizar(Post post)
-        {
-            throw new NotImplementedException();
-        }
+        public void Atualizar(Post post) =>
+            _context.Post.Update(post);           
 
-        public Task Create(Post newPost)
-        {
-            throw new NotImplementedException();
+        public async Task Create(Post newPost){
+            await _context.Post.AddAsync(newPost);
+            await Save();
         }
-
+        
         public async Task<List<Post>> GetAll()
-            => await _context.Post.ToListAsync();
+            => await _context.Post
+                             .Include(e => e.Curtidas)
+                             .Include(e => e.Comentarios)
+                             .Include(e => e.Favoritos)
+                             .Where(e => e.Ativo)
+                             .OrderByDescending(e => e.CriadoEm)
+                             .ThenByDescending(e => e.Comentarios.Select(e => e.CriadoEm))
+                             .ToListAsync();
 
-        public Task<Post> GetById(Guid postId)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Post> GetById(Guid postId)
+            => await _context.Post.Where(e => e.Id == postId && e.Ativo).FirstOrDefaultAsync();
 
         public Task Save()
             => _context.SaveChangesAsync();        
