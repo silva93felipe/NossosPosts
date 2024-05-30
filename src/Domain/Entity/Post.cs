@@ -11,15 +11,19 @@ namespace Domain.Entity
             UserId = userId;
             Comentarios = [];
             Curtidas = [];
+            Favoritos = [];
         }
 
         public void Comentar(Guid userId, string texto){
+            AtualizadoEm = DateTime.Now;
             Comentarios.Add(new Comentario(texto, Id, userId));
         }
         public void Curtir(Guid userId){
+            AtualizadoEm = DateTime.Now;
             Curtidas.Add(new Curtida(Id, userId));
         }
          public void Favoritar(Guid userId){
+            AtualizadoEm = DateTime.Now;
             Favoritos.Add(new Favorito(Id, userId));
         }
     }

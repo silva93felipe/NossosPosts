@@ -20,6 +20,18 @@ namespace Infra.Repository
             await _context.Post.AddAsync(newPost);
             await Save();
         }
+
+         // TODO - Como ordernar os comentarios do post pela consulta, e porque essa consulta so traz o posts
+         
+        /* var a = (from posts in _context.Post.AsNoTracking()
+                    join comentarios in _context.Comentario.AsNoTracking() on posts.Id equals comentarios.PostId
+                    join curtidas in _context.Curtida.AsNoTracking() on posts.Id equals curtidas.PostId
+                    join favoritos in _context.Favorito.AsNoTracking() on posts.Id equals favoritos.PostId
+                    orderby comentarios.CriadoEm descending 
+                    orderby posts.CriadoEm descending
+                    select ( posts, comentarios, curtidas, favoritos )
+            )
+            .ToList(); */
         
         public async Task<List<Post>> GetAll()
             => await _context.Post
@@ -28,7 +40,6 @@ namespace Infra.Repository
                              .Include(e => e.Favoritos)
                              .Where(e => e.Ativo)
                              .OrderByDescending(e => e.CriadoEm)
-                             .ThenByDescending(e => e.Comentarios.Select(e => e.CriadoEm))
                              .ToListAsync();
 
         public async Task<Post> GetById(Guid postId)

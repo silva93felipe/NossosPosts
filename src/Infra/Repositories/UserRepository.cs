@@ -19,10 +19,10 @@ namespace Infra.Repository
             await Save();
         }
 
-        public async Task<User> GetById(Guid userId)
-            => await _context.User.FirstOrDefaultAsync(e => e.Id == userId);
+        public Task<User> GetById(Guid userId)
+            => _context.User.FirstOrDefaultAsync(e => e.Id == userId);
 
-        public async Task Save()
-            => await _context.SaveChangesAsync();
+        public Task Save()
+            =>  _context.SaveChangesAsync();
     }
 }
