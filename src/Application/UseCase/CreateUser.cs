@@ -11,7 +11,7 @@ namespace Application.UseCase
             _userRepository = userRepository;
         }
 
-        public void Execute(string email, string senha){
+        public async Task Execute(string email, string senha){
             if(string.IsNullOrEmpty(email)) {
                 throw new ArgumentNullException("email");
             }
@@ -19,7 +19,7 @@ namespace Application.UseCase
                 throw new ArgumentNullException("senha");
             }            
             User newUser = new(email, senha);
-            _userRepository.Create(newUser);
+            await _userRepository.Create(newUser);
         }
     }
 }

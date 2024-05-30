@@ -14,10 +14,10 @@ namespace Application.UseCase
             _postRepository = postRepository;
         }
 
-        public async void Execute(Guid userId){
+        public async Task Execute(Guid userId, string titulo, string imagem, string descricao){
             User user = await _userRepository.GetById(userId);
             if(user == null) throw new UserNotFoundException("User not found!");
-            Post newPost = new(userId);
+            Post newPost = new(userId, titulo, imagem, descricao);
             await _postRepository.Create(newPost);
         }
     }

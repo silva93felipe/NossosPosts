@@ -1,5 +1,6 @@
 using Application.UseCase;
 using Domain.Repositories;
+using Infra.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Infra.Controller
@@ -27,5 +28,17 @@ namespace Infra.Controller
 
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _getPostsUseCase.Execute());
+        [HttpPost]
+        public async Task<IActionResult> CreatePost(CreatePostDto post) {
+            try
+            {
+                await _createPostUseCase.Execute(post.UserId, post.Titulo, post.Imagem, post.Descricao);
+                return Ok(new { message = "Post criando com sucesso." });
+            }
+            catch (Exception err)
+            {
+                return BadRequest(new { message = err.Message });       
+            }
+        }
     }
 }
