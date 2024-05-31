@@ -11,6 +11,7 @@ namespace Infra.Controller
     {
         private readonly CreatePost _createPostUseCase;
         private readonly GetPosts _getPostsUseCase;
+        private readonly CurtirPost _curtirPost;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         public PostController(IUserRepository userRepository, IPostRepository postRepository)
@@ -19,11 +20,7 @@ namespace Infra.Controller
             _postRepository = postRepository;
             _createPostUseCase = new CreatePost(_userRepository, _postRepository);
             _getPostsUseCase = new GetPosts(_postRepository);
-        }
-        [HttpGet]
-        [Route("ping")]
-        public IActionResult Teste(){
-            return Ok("Pong");
+            _curtirPost = new CurtirPost(_userRepository, _postRepository);
         }
 
         [HttpGet]
@@ -34,6 +31,19 @@ namespace Infra.Controller
             {
                 await _createPostUseCase.Execute(post.UserId, post.Titulo, post.Imagem, post.Descricao);
                 return Ok(new { message = "Post criando com sucesso." });
+            }
+            catch (Exception err)
+            {
+                return BadRequest(new { message = err.Message });       
+            }
+        }
+
+        [HttpPost("Curtir/{postId}")]
+        public async Task<IActionResult> CurtirPost(Guid postId, [FromBody]Guid userId) {
+            try
+            {
+                await _curtirPost.Execute( postId, userId);
+                return Ok(new { message = "Post curtido" });
             }
             catch (Exception err)
             {
