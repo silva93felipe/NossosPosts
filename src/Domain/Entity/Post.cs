@@ -28,9 +28,14 @@ namespace Domain.Entity
             AtualizadoEm = DateTime.Now;
             Curtidas.Add(new Curtida(Id, userId));
         }
-         public void Favoritar(Guid userId){
+        public void Favoritar(Guid userId){
             AtualizadoEm = DateTime.Now;
             Favoritos.Add(new Favorito(Id, userId));
+        }
+
+        public void Desfavoritar(Favorito favorito){
+            AtualizadoEm = DateTime.Now;
+            favorito.Inativar();
         }
     }
 }

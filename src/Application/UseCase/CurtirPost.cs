@@ -20,7 +20,7 @@ namespace Application.UseCase
             Post post =  await _postRepository.GetById(postId);
             if (post == null) throw new PostNotFoundException("Post not found");
             post.Curtir(user.Id);
-            await _postRepository.Save();
+            await _postRepository.AddCurtida(post.Curtidas);
         }
     }
 }

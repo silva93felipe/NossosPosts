@@ -9,5 +9,8 @@ namespace Domain.Repositories
         public Task Create(Post newPost);
         public void Atualizar(Post post);
         public Task Save();
+        Task AddCurtida(List<Curtida> curtidas);
+        Task AddFavoritar(List<Favorito> favoritos);
+        Task AtualizarFavorito(Favorito favorito);
     }
 }

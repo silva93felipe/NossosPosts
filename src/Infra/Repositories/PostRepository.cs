@@ -13,8 +13,10 @@ namespace Infra.Repository
             _context = postContext;
         }
 
-        public void Atualizar(Post post) =>
-            _context.Post.Update(post);           
+        public void Atualizar(Post post){
+            _context.Post.Update(post);    
+            Save();       
+        }
 
         public async Task Create(Post newPost){
             await _context.Post.AddAsync(newPost);
@@ -43,7 +45,27 @@ namespace Infra.Repository
                              .ToListAsync();
 
         public async Task<Post> GetById(Guid postId)
-            => await _context.Post.Where(e => e.Id == postId && e.Ativo).FirstOrDefaultAsync();
+            => await _context.Post
+                             .Include(e => e.Comentarios)
+                             .Include(e => e.Favoritos)
+                             .Include(e => e.Curtidas)
+                             .Where(e => e.Id == postId && e.Ativo)
+                             .FirstOrDefaultAsync();
+
+        public async Task AddCurtida(List<Curtida> curtidas){
+            await _context.Curtida.AddRangeAsync(curtidas);
+            await Save();
+        }
+
+        public async Task AddFavoritar(List<Favorito> favoritos){
+            await _context.Favorito.AddRangeAsync(favoritos);
+            await Save();
+        }
+
+        public async Task AtualizarFavorito(Favorito favorito){
+            _context.Favorito.Update(favorito);
+            await Save();
+        }
 
         public Task Save()
             => _context.SaveChangesAsync();        

@@ -12,6 +12,7 @@ namespace Infra.Controller
         private readonly CreatePost _createPostUseCase;
         private readonly GetPosts _getPostsUseCase;
         private readonly CurtirPost _curtirPost;
+        private readonly FavoritarPost _favoritarPost;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         public PostController(IUserRepository userRepository, IPostRepository postRepository)
@@ -21,12 +22,13 @@ namespace Infra.Controller
             _createPostUseCase = new CreatePost(_userRepository, _postRepository);
             _getPostsUseCase = new GetPosts(_postRepository);
             _curtirPost = new CurtirPost(_userRepository, _postRepository);
+            _favoritarPost = new FavoritarPost(_postRepository, _userRepository);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _getPostsUseCase.Execute());
         [HttpPost]
-        public async Task<IActionResult> CreatePost(CreatePostDto post) {
+        public async Task<IActionResult> Create(CreatePostDto post) {
             try
             {
                 await _createPostUseCase.Execute(post.UserId, post.Titulo, post.Imagem, post.Descricao);
@@ -39,11 +41,24 @@ namespace Infra.Controller
         }
 
         [HttpPost("Curtir/{postId}")]
-        public async Task<IActionResult> CurtirPost(Guid postId, [FromBody]Guid userId) {
+        public async Task<IActionResult> Curtir(Guid postId, [FromBody]Guid userId) {
             try
             {
                 await _curtirPost.Execute( postId, userId);
                 return Ok(new { message = "Post curtido" });
+            }
+            catch (Exception err)
+            {
+                return BadRequest(new { message = err.Message });       
+            }
+        }
+
+        [HttpPost("Favoritar/{postId}")]
+        public async Task<IActionResult> Favoritar(Guid postId, [FromBody]Guid userId) {
+            try
+            {
+                await _favoritarPost.Execute( postId, userId);
+                return Ok(new { message = "Post favoritado" });
             }
             catch (Exception err)
             {

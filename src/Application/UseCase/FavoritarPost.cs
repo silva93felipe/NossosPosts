@@ -14,13 +14,24 @@ namespace Application.UseCase
             _userRepository = userRepository;
         }
 
-        public async Task Execute(Guid userId, Guid postId){
+        // TODO - Favoritar e desfavoritar são dois use cases destintos... separar
+        public async Task Execute(Guid postId, Guid userId){
             User user = await _userRepository.GetById(userId);
             if (user == null) throw new UserNotFoundException("User not found");
             Post post =  await _postRepository.GetById(postId);
             if (post == null) throw new PostNotFoundException("Post not found");
-            post.Favoritar(userId);
-            _postRepository.Atualizar(post);
+            Favorito isFavorito = post.Favoritos.Find(e => e.UserId == userId);
+            if(isFavorito != null){
+                if(isFavorito.Ativo == false){
+                    isFavorito.Ativar();
+                }else{
+                    isFavorito.Inativar();                    
+                }
+                await _postRepository.AtualizarFavorito(isFavorito);
+            }else{
+                post.Favoritar(userId);
+                await _postRepository.AddFavoritar(post.Favoritos);
+            }
         }
     }
 }
