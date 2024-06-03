@@ -9,5 +9,15 @@ namespace Domain.Entity
             PostId = postId;
             UserId = userId;
         }
+
+        public void Inativar(){
+            Ativo = false;
+            AtualizadoEm = DateTime.Now;
+        }
+
+        public void Ativar(){
+            Ativo = true;
+            AtualizadoEm = DateTime.Now;
+        }
     }
 }

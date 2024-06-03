@@ -13,13 +13,14 @@ namespace Application.UseCase
             _userRepository = userRepository;
             _postRepository = postRepository;
         }
-        public async void Execute(Guid postId, Guid userId, string texto){
+        public async Task Execute(Guid postId, Guid userId, string texto){
             User user = await _userRepository.GetById(userId);
             if (user == null) throw new UserNotFoundException("User not found");
             Post post =  await _postRepository.GetById(postId);
             if (post == null) throw new PostNotFoundException("Post not found");
             post.Comentar(user.Id, texto);
-            await _postRepository.Save();
+            await _postRepository.AddComentario(post.Comentarios);
+            
         }
     }
 }

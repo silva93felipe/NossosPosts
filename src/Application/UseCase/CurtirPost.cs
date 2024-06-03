@@ -19,8 +19,18 @@ namespace Application.UseCase
             if (user == null) throw new UserNotFoundException("User not found");
             Post post =  await _postRepository.GetById(postId);
             if (post == null) throw new PostNotFoundException("Post not found");
-            post.Curtir(user.Id);
-            await _postRepository.AddCurtida(post.Curtidas);
+            Curtida curtida = post.Curtidas.Find(c => c.UserId == userId);
+            if (curtida != null){
+                if(curtida.Ativo == false){
+                    curtida.Ativar();
+                }else{
+                    curtida.Inativar();
+                }
+                await _postRepository.RemoveCurtida(curtida);
+            }else{
+                post.Curtir(user.Id);
+                await _postRepository.AddCurtida(post.Curtidas);
+            }
         }
     }
 }

@@ -27,10 +27,10 @@ namespace Application.UseCase
                 }else{
                     isFavorito.Inativar();                    
                 }
-                await _postRepository.AtualizarFavorito(isFavorito);
+                await _postRepository.RemoveFavorito(isFavorito);
             }else{
                 post.Favoritar(userId);
-                await _postRepository.AddFavoritar(post.Favoritos);
+                await _postRepository.AddFavorito(post.Favoritos);
             }
         }
     }

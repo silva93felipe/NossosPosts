@@ -10,7 +10,11 @@ namespace Domain.Repositories
         public void Atualizar(Post post);
         public Task Save();
         Task AddCurtida(List<Curtida> curtidas);
-        Task AddFavoritar(List<Favorito> favoritos);
-        Task AtualizarFavorito(Favorito favorito);
+        Task RemoveCurtida(Curtida curtida);
+        Task AddFavorito(List<Favorito> favoritos);
+        Task RemoveFavorito(Favorito favorito);
+        Task AddComentario(List<Comentario> comentarios);
+        Task RemoveComentario(Comentario comentario);
+        Task<Comentario> GetComentarioById(Guid comentarioId);
     }
 }

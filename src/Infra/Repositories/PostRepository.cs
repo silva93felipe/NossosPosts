@@ -34,6 +34,13 @@ namespace Infra.Repository
                     select ( posts, comentarios, curtidas, favoritos )
             )
             .ToList(); */
+
+        // TODO - Como fazer uma consulta que traga os posts e curtidas, favorito, comentarios ativos
+
+        /* (   e.Curtidas.Any(c => c.Ativo)
+            || e.Favoritos.Any(c => c.Ativo)
+            || e.Comentarios.Any(c => c.Ativo) 
+        ) */
         
         public async Task<List<Post>> GetAll()
             => await _context.Post
@@ -57,17 +64,36 @@ namespace Infra.Repository
             await Save();
         }
 
-        public async Task AddFavoritar(List<Favorito> favoritos){
-            await _context.Favorito.AddRangeAsync(favoritos);
+        public async Task RemoveCurtida(Curtida curtida)
+        {
+           _context.Curtida.Update(curtida);
+           await Save();
+        }
+
+        public async Task AddFavorito(List<Favorito> favoritos){
+            _context.Favorito.UpdateRange(favoritos);
             await Save();
         }
 
-        public async Task AtualizarFavorito(Favorito favorito){
+        public async Task RemoveFavorito(Favorito favorito){
             _context.Favorito.Update(favorito);
             await Save();
         }
 
+        public async Task AddComentario(List<Comentario> comentarios){
+            await _context.Comentario.AddRangeAsync(comentarios);
+            await Save();
+        }
+
+        public async Task RemoveComentario(Comentario comentario){
+            _context.Comentario.Remove(comentario);
+            await Save();
+        }
+
+        public async Task<Comentario> GetComentarioById(Guid comentarioId) 
+            => await _context.Comentario.FirstOrDefaultAsync(e => e.Id == comentarioId);
+
         public Task Save()
-            => _context.SaveChangesAsync();        
+            => _context.SaveChangesAsync();
     }
 }
